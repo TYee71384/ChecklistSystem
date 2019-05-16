@@ -37,6 +37,11 @@ namespace ChecklistAngular.Data
             return checklist;
         }
 
+        public async Task<LogChecklistIndex> GetIndex(int id)
+        {
+            return await _ctx.LogChecklistIndex.FindAsync(id);
+        }
+
         public async Task<PagedList<LogChecklist>> GetChecklists(ChecklistParams cparams)
         {
             var checklists = _ctx.LogChecklist.AsQueryable();

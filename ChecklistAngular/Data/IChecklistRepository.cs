@@ -27,5 +27,6 @@ namespace ChecklistAngular.Data
         void EditStep(LogChecklistSteps step);
         string GetStatus(int updateId);
         Task<LogChecklist> DraftExists(int id);
+        Task<LogChecklistIndex> GetIndex(int id);
     }
 }
