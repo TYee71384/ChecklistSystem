@@ -69,6 +69,24 @@ namespace ChecklistAngular.Controllers
             return NoContent();
         }
 
+        [HttpDelete]
+        public async Task<ActionResult> DeleteStep(int stepId, LogChecklistSteps step)
+        {
+           _repo.Delete(step);
+            var checklist = await _repo.GetChecklist(step.Idchecklist, step.Version);
+            var stepNum = 1;
+          var steps =  checklist.LogChecklistSteps.OrderByDescending(s => s.Step);
+            foreach (var s in steps)
+            {
+                s.Step = (short)stepNum;
+                stepNum++;
+            }
+
+            if(await _repo.SaveAll())
+            return NoContent();
+            return BadRequest("There was a problem deleting this step. Please try again");
+        }
+
         [HttpPost("reorder")]
         public async Task<ActionResult> ReorderSteps(LogChecklist checklist)
         {

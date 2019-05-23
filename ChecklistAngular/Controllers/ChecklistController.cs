@@ -43,7 +43,7 @@ namespace ChecklistAngular.Controllers
         }
 
         [HttpGet("{id}/{ver?}", Name = "GetById")]
-        public async Task<ActionResult<LogChecklist>> GetbyId([FromRoute] int id, int ver)
+        public async Task<ActionResult<LogChecklist>> GetbyId([FromRoute] int id, short ver)
         {
             var checklist = await _repo.GetChecklist(id, ver);
             return checklist;
@@ -77,12 +77,12 @@ namespace ChecklistAngular.Controllers
         }
 
         [HttpPut("{id}/{ver}")]
-        public async Task<IActionResult> EditChecklist(int id, int ver, ChecklistDescription checklistDescription)
+        public async Task<IActionResult> EditChecklist(int id, short ver, ChecklistDescription checklistDescription)
         {
             //Edit the description of checklist to edit steps use ChecklistStepsController
             //var user = WindowsIdentity.GetCurrent().Name;
             var checklist = _mapper.Map<LogChecklist>(checklistDescription);
-            var history = LogHistory(checklist, "Edited Description", (short)ver);
+            var history = LogHistory(checklist, "Edited Description", ver);
             _repo.Add(history);
 
             _repo.EditChecklist(checklist);
@@ -94,7 +94,7 @@ namespace ChecklistAngular.Controllers
         }
 
         [HttpPost("{id}/{ver}/archive")]
-        public async Task<ActionResult> ArchiveChecklist(int id, int ver)
+        public async Task<ActionResult> ArchiveChecklist(int id, short ver)
         {
             var checklist = await _repo.GetChecklist(id, ver);
             var status = checklist.Status;
@@ -111,7 +111,7 @@ namespace ChecklistAngular.Controllers
 
             checklist.Status = "Archived";
             _repo.EditChecklist(checklist);
-          var history =  LogHistory(checklist, "Marked as Archived", (short)ver);
+          var history =  LogHistory(checklist, "Marked as Archived", ver);
             _repo.Add(history);
             
            await _repo.SaveAll();
