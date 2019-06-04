@@ -26,12 +26,12 @@ namespace ChecklistAngular.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetUpdateChecklists([FromQuery]UpdateParams uparams)
+        public async Task<ActionResult> GetUpdateChecklists()
         {
           
-           var returnList = await _repo.GetUpdates(uparams);
+           var returnList = await _repo.GetUpdates();
 
-            Response.AddPagination(returnList.CurrentPage, returnList.PageSize, returnList.TotalCount, returnList.TotalPages);
+          //  Response.AddPagination(returnList.CurrentPage, returnList.PageSize, returnList.TotalCount, returnList.TotalPages);
 
             return Ok(returnList);
         }
@@ -79,6 +79,7 @@ namespace ChecklistAngular.Controllers
         }
 
         [HttpPost("{id}/admin")]
+        [Authorize(Policy = "AccessUser")]
         public async Task<ActionResult> AdminComplete(int id)
         {
             var update = await _repo.GetUpdate(id);

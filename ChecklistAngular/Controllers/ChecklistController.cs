@@ -8,6 +8,7 @@ using ChecklistAngular.Data;
 using ChecklistAngular.DTOs;
 using ChecklistAngular.Helpers;
 using ChecklistAngular.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,11 +33,11 @@ namespace ChecklistAngular.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] ChecklistParams cparams)
+        public async Task<ActionResult> Get()
         {
 
-            var returnList = await _repo.GetChecklists(cparams);
-            Response.AddPagination(returnList.CurrentPage, returnList.PageSize, returnList.TotalCount, returnList.TotalPages);
+            var returnList = await _repo.GetChecklists();
+           // Response.AddPagination(returnList.CurrentPage, returnList.PageSize, returnList.TotalCount, returnList.TotalPages);
 
             return Ok(returnList);
 
@@ -94,6 +95,7 @@ namespace ChecklistAngular.Controllers
         }
 
         [HttpPost("{id}/{ver}/archive")]
+        [Authorize(Policy = "AccessUser")]
         public async Task<ActionResult> ArchiveChecklist(int id, short ver)
         {
             var checklist = await _repo.GetChecklist(id, ver);
@@ -122,6 +124,7 @@ namespace ChecklistAngular.Controllers
         }
 
         [HttpPost("{id}/{ver}/approve")]
+        [Authorize(Policy = "AccessUser")]
         public async Task<ActionResult> ApproveChecklist(int id, int ver)
         {
             var checklist = await _repo.GetChecklist(id, ver);
@@ -159,6 +162,7 @@ namespace ChecklistAngular.Controllers
         }
 
         [HttpDelete("{id}/{ver}")]
+        [Authorize(Policy = "AccessUser")]
         public async Task<ActionResult> DeleteChecklist(int id, short ver)
         {
             var checklist = await _repo.GetChecklist(id, ver);

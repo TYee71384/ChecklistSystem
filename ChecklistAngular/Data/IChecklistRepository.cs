@@ -9,10 +9,10 @@ namespace ChecklistAngular.Data
 {
    public interface IChecklistRepository
     {
-        Task<PagedList<LogChecklist>> GetChecklists(ChecklistParams cparams);
+       // Task<PagedList<LogChecklist>> GetChecklists(ChecklistParams cparams);
         Task<LogChecklist> GetChecklist(int id, int ver);
         Task<LogUpdate> GetUpdate(int id);
-        Task<PagedList<LogUpdate>> GetUpdates(UpdateParams uparams);
+        //Task<PagedList<LogUpdate>> GetUpdates(UpdateParams uparams);
         Task<IEnumerable<LogChecklist>> ChecklistSelect(UpdateParams uparams);
         Task<LogUpdate> SingleChecklistSelect(UpdateParams uparams);
         void Add<T>(T entity) where T : class;
@@ -28,5 +28,7 @@ namespace ChecklistAngular.Data
         string GetStatus(int updateId);
         Task<LogChecklist> DraftExists(int id);
         Task<LogChecklistIndex> GetIndex(int id);
+        Task<IEnumerable<LogUpdate>> GetUpdates();
+        Task<IEnumerable<LogChecklist>> GetChecklists();
     }
 }

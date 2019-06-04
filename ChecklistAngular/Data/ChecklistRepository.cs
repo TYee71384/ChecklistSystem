@@ -42,53 +42,65 @@ namespace ChecklistAngular.Data
             return await _ctx.LogChecklistIndex.FindAsync(id);
         }
 
-        public async Task<PagedList<LogChecklist>> GetChecklists(ChecklistParams cparams)
+        public async Task<IEnumerable<LogChecklist>> GetChecklists()
         {
-            var checklists = _ctx.LogChecklist.AsQueryable();
-
-            if (cparams.Platform != null)
-            {
-                checklists = checklists.Where(c => c.ProdLine == cparams.Platform);
-            }
-            if (cparams.System != null)
-            {
-                checklists = checklists.Where(c => c.System == cparams.System);
-            }
-            if (cparams.Process != null)
-            {
-                checklists = checklists.Where(c => c.Process == cparams.Process);
-            }
-            if (cparams.Keyword != null)
-            {
-                checklists = checklists.Where(c => c.Title.Contains(cparams.Keyword.ToLower()));
-            }
-
-            return await PagedList<LogChecklist>.CreateAsync(checklists, cparams.PageNumber, cparams.PageSize);
+            return await _ctx.LogChecklist.ToListAsync();
         }
+
+        //server side paging (commented out in case ned in the future, using client side instead for use with primeng datatable)
+        //public async Task<PagedList<LogChecklist>> GetChecklists(ChecklistParams cparams)
+        //{
+        //    var checklists = _ctx.LogChecklist.AsQueryable();
+
+        //    if (cparams.Platform != null)
+        //    {
+        //        checklists = checklists.Where(c => c.ProdLine == cparams.Platform);
+        //    }
+        //    if (cparams.System != null)
+        //    {
+        //        checklists = checklists.Where(c => c.System == cparams.System);
+        //    }
+        //    if (cparams.Process != null)
+        //    {
+        //        checklists = checklists.Where(c => c.Process == cparams.Process);
+        //    }
+        //    if (cparams.Keyword != null)
+        //    {
+        //        checklists = checklists.Where(c => c.Title.Contains(cparams.Keyword.ToLower()));
+        //    }
+
+        //    return await PagedList<LogChecklist>.CreateAsync(checklists, cparams.PageNumber, cparams.PageSize);
+        //}
 
         public async Task<LogUpdate> GetUpdate(int id)
         {
             return await _ctx.LogUpdate.Include(x => x.LogUpdateSteps).Include(x => x.LogUpdateHistory).FirstOrDefaultAsync(x => x.Idupdate == id);
         }
 
-        public async Task<PagedList<LogUpdate>> GetUpdates(UpdateParams uparams)
+        public async Task<IEnumerable<LogUpdate>> GetUpdates()
         {
-            var updateChecklists = _ctx.LogUpdate.AsQueryable();
-
-            if (uparams.Platform != null)
-                updateChecklists = updateChecklists.Where(u => u.ProdLine == uparams.Platform);
-            if (uparams.System != null)
-                updateChecklists = updateChecklists.Where(u => u.System == uparams.Platform);
-            if (uparams.Process != null)
-                updateChecklists = updateChecklists.Where(u => u.Process == uparams.Process);
-            if (uparams.Release != null)
-                updateChecklists = updateChecklists.Where(u => u.UpdateRelease == uparams.Release);
-            if (uparams.Task > 0)
-                updateChecklists = updateChecklists.Where(u => u.Task == uparams.Task);
-
-            return await PagedList<LogUpdate>.CreateAsync(updateChecklists, uparams.PageNumber, uparams.PageSize);
-
+            return await _ctx.LogUpdate.ToListAsync();
         }
+
+        //server side paging (commented out in case ned in the future, using client side instead for use with primeng datatable)
+        //public async Task<PagedList<LogUpdate>> GetUpdates(UpdateParams uparams)
+        //{
+        //    var updateChecklists = _ctx.LogUpdate.AsQueryable();
+
+        //    if (uparams.Platform != null)
+        //        updateChecklists = updateChecklists.Where(u => u.ProdLine == uparams.Platform);
+        //    if (uparams.System != null)
+        //        updateChecklists = updateChecklists.Where(u => u.System == uparams.Platform);
+        //    if (uparams.Process != null)
+        //        updateChecklists = updateChecklists.Where(u => u.Process == uparams.Process);
+        //    if (uparams.Release != null)
+        //        updateChecklists = updateChecklists.Where(u => u.UpdateRelease == uparams.Release);
+        //    if (uparams.Task > 0)
+        //        updateChecklists = updateChecklists.Where(u => u.Task == uparams.Task);
+
+        //    return await PagedList<LogUpdate>.CreateAsync(updateChecklists, uparams.PageNumber, uparams.PageSize);
+
+        //}
 
         public async Task<LogUpdate> SingleChecklistSelect(UpdateParams uparams)
         {
