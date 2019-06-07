@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ChecklistAngular.Data;
 using ChecklistAngular.Helpers;
 using ChecklistAngular.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,19 +17,16 @@ namespace ChecklistAngular.Controllers
     [ApiController]
     public class UpdateController : ControllerBase
     {
-      
         private readonly IChecklistRepository _repo;
 
         public UpdateController(IChecklistRepository repo)
         {
-         
             _repo = repo;
         }
 
         [HttpGet]
         public async Task<ActionResult> GetUpdateChecklists()
         {
-          
            var returnList = await _repo.GetUpdates();
 
           //  Response.AddPagination(returnList.CurrentPage, returnList.PageSize, returnList.TotalCount, returnList.TotalPages);

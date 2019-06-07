@@ -7,13 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ChecklistAngular
@@ -41,7 +38,7 @@ namespace ChecklistAngular
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
                 opt =>
                 {
-                    
+
                     opt.Events.OnRedirectToLogin = ctx =>
                     {
                         ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -110,9 +107,9 @@ namespace ChecklistAngular
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
-            app.MapWhen(ctx => !ctx.Request.Path.StartsWithSegments("/api"), branch => {
-                branch.UseAuthentication();
-            });
+            //app.MapWhen(ctx => !ctx.Request.Path.StartsWithSegments("/api"), branch => {
+            //    branch.UseAuthentication();
+            //});
 
             //app.UseSpa(spa =>
             //{

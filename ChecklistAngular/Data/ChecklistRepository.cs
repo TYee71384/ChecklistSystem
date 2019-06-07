@@ -26,6 +26,7 @@ namespace ChecklistAngular.Data
                           .Include(x => x.LogChecklistSteps)
                            .Include(x => x.LogChecklistHistory)
                            .Where(x => x.Idchecklist == id && x.Version == ver).FirstOrDefaultAsync();
+                
             }
             else
             {
@@ -34,6 +35,7 @@ namespace ChecklistAngular.Data
                                 .Include(x => x.LogChecklistHistory)
                                 .Where(x => x.Idchecklist == id && x.Version >= ver).OrderByDescending(v => v.Version).FirstOrDefaultAsync();
             }
+            checklist.LogChecklistSteps = checklist.LogChecklistSteps.OrderBy(x => x.Step).ToList();
             return checklist;
         }
 
@@ -175,6 +177,14 @@ namespace ChecklistAngular.Data
         {
             _ctx.Entry(step).State = EntityState.Modified;
         }
+
+        public void ReorderSteps(LogChecklistSteps step)
+        {
+            //_ctx.LogChecklistSteps.Update(step);
+            _ctx.Attach(step);
+            _ctx.Entry(step).Property("Step").IsModified = true;
+        }
+
 
         public string GetStatus(int updateId)
         {

@@ -87,14 +87,13 @@ namespace ChecklistAngular.Controllers
             return BadRequest("There was a problem deleting this step. Please try again");
         }
 
-        [HttpPost("reorder")]
+        [HttpPut("reorder")]
         public async Task<ActionResult> ReorderSteps(LogChecklist checklist)
         {
-            var step = 1;
+            
             foreach(var s in checklist.LogChecklistSteps)
             {
-                s.Step = (short)step;
-                step++;
+                _repo.ReorderSteps(s);
             }
            
             await _repo.SaveAll();

@@ -30,5 +30,6 @@ namespace ChecklistAngular.Data
         Task<LogChecklistIndex> GetIndex(int id);
         Task<IEnumerable<LogUpdate>> GetUpdates();
         Task<IEnumerable<LogChecklist>> GetChecklists();
+        void ReorderSteps(LogChecklistSteps step);
     }
 }

@@ -203,7 +203,7 @@ namespace ChecklistAngular.Models
 
             modelBuilder.Entity<LogChecklistSteps>(entity =>
             {
-                entity.HasKey(e => new { e.Idchecklist, e.Version, e.Step, e.Idstep });
+                entity.HasKey(e => new { e.Idchecklist, e.Version, e.Idstep });
 
                 entity.HasIndex(e => e.Idstep)
                     .HasName("IDstep");
