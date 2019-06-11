@@ -11,6 +11,7 @@ namespace ChecklistAngular.Models
         public short Version { get; set; }
         public short Step { get; set; }
         public string StepText { get; set; }
+        public string Title { get; set; }
 
         [JsonIgnore]
         public LogChecklistIndex IdchecklistNavigation { get; set; }

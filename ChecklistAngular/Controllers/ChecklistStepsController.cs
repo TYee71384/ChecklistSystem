@@ -15,21 +15,21 @@ namespace ChecklistAngular.Controllers
     [ApiController]
     public class ChecklistStepsController : ControllerBase
     {
-       
+
         private readonly IChecklistRepository _repo;
         private readonly string user;
-        
+
 
         public ChecklistStepsController(IChecklistRepository repo)
         {
-          
+
             _repo = repo;
             user = WindowsIdentity.GetCurrent().Name;
             user = user.Substring(user.IndexOf(@"\") + 1);
         }
 
         [HttpGet("{stepId}", Name = "GetStep")]
-        public async Task<ActionResult> GetStep(int checklistId, int checklistVer,int stepId)
+        public async Task<ActionResult> GetStep(int checklistId, int checklistVer, int stepId)
         {
             var step = await _repo.GetChecklistStep(stepId);
             return Ok(step);
@@ -48,28 +48,28 @@ namespace ChecklistAngular.Controllers
             _repo.Add(step);
             var history = FileHistory(step, "Draft", "Added a Step");
 
-            
+
             _repo.Add(history);
 
             await _repo.SaveAll();
 
-            return CreatedAtRoute("GetStep", new { stepId = step.Idstep}, step);
+            return CreatedAtRoute("GetStep", new { stepId = step.Idstep }, step);
         }
 
         [HttpPut("{stepId}")]
         public async Task<ActionResult> EditStep(int stepId, LogChecklistSteps step)
         {
-            
+
             step.Idstep = stepId;
             _repo.EditStep(step);
             var history = FileHistory(step, "Draft", "Edited a Step");
-           
-             _repo.Add(history);
+
+            _repo.Add(history);
             await _repo.SaveAll();
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpPost("{stepId}")]
         public async Task<ActionResult> DeleteStep(int stepId, LogChecklistSteps step)
         {
            _repo.Delete(step);
