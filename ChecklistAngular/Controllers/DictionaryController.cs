@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using ChecklistAngular.Models;
 using Microsoft.AspNetCore.Http;
@@ -14,10 +15,12 @@ namespace ChecklistAngular.Controllers
     public class DictionaryController : ControllerBase
     {
         private readonly SWAT_UpdateChecklistsContext _ctx;
-
+        private readonly string user;
         public DictionaryController(SWAT_UpdateChecklistsContext ctx)
         {
             _ctx = ctx;
+            user = WindowsIdentity.GetCurrent().Name;
+            user = user.Substring(user.IndexOf(@"\") + 1);
         }
 
         public ActionResult<DropDownOptions> GetDictionaries()
@@ -49,6 +52,22 @@ namespace ChecklistAngular.Controllers
              _ctx.ListSite.Add(site);
             await _ctx.SaveChangesAsync();
             return NoContent();
+        }
+
+        [HttpGet("authorized")]
+        public ActionResult IsAuthorized()
+        {
+            var isAuth = false;
+            foreach (var u in _ctx.ListUserApprove)
+            {
+                if (user.ToUpper() == u.UserApprove.ToString())
+                {
+                    isAuth = true;
+                }
+                    
+
+            }
+            return Ok(isAuth);
         }
        
     }
