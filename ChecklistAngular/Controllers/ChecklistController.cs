@@ -131,6 +131,7 @@ namespace ChecklistAngular.Controllers
             //Edit the description of checklist to edit steps use ChecklistStepsController
             //var user = WindowsIdentity.GetCurrent().Name;
             var checklist = _mapper.Map<LogChecklist>(checklistDescription);
+            checklist.Status = "Draft";
             var history = LogHistory(checklist, "Edited Description", ver);
             _repo.Add(history);
 

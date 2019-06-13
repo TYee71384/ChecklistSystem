@@ -81,6 +81,7 @@ namespace ChecklistAngular.Controllers
                 s.Step = (short)stepNum;
                 stepNum++;
             }
+            _repo.Add(FileHistory(step, "Draft", "Deleted a Step"));
 
             if(await _repo.SaveAll())
             return NoContent();

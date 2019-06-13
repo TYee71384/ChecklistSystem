@@ -9,7 +9,6 @@ namespace ChecklistAngular.DTOs
     {
         public int Idchecklist { get; set; }
         public short Version { get; set; }
-        public string Status { get; set; }
         public string Title { get; set; }
         public string ProdLine { get; set; }
         public string System { get; set; }

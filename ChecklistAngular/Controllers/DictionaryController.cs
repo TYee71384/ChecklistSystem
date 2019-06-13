@@ -67,7 +67,7 @@ namespace ChecklistAngular.Controllers
                     
 
             }
-            return Ok(isAuth);
+            return Ok(new { isAuth, user });
         }
        
     }
