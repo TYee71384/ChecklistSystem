@@ -77,6 +77,54 @@ namespace ChecklistAngular.Controllers
             return BadRequest("Failed to Create Checklist");
         }
 
+        [HttpPost("{id}/{ver}/draft")]
+        [Authorize(Policy = "AccessUser")]
+        public async Task<ActionResult> CreateDraft(int id, short ver, LogChecklist checklist)
+        {
+            if (id < 0 || ver < 0)
+                return BadRequest("Id or version was not supplied");
+            if (checklist.Status != "Approved")
+                return BadRequest("Invalid Status");
+            if (await _repo.CheckForDraft(id) !=null)
+                return BadRequest("Draft already exists");
+
+            var steps = new List<LogChecklistSteps>();
+           short newVer = ver += 1;
+            foreach(var step in checklist.LogChecklistSteps)
+            {
+                var copy = new LogChecklistSteps
+                {
+                    Idchecklist = id,
+                    Version = newVer,
+                    Step = step.Step,
+                    StepText = step.StepText,
+                    Title = step.Title
+                };
+
+                steps.Add(copy);
+            }
+
+            var newChecklist = new LogChecklist
+            {
+                Idchecklist = id,
+                Version = newVer,
+                Status = "Draft",
+                Title = checklist.Title,
+                ProdLine = checklist.ProdLine,
+                Rel = checklist.Rel,
+                Scope = checklist.Scope,
+                Type = checklist.Type,
+                LogChecklistSteps = steps
+            };
+            _repo.Add(newChecklist);
+            _repo.Add(LogHistory(newChecklist, "Create new Checklist Version", newChecklist.Version));
+            await _repo.SaveAll();
+
+            return CreatedAtAction("GetbyId", new { id = newChecklist.Idchecklist, ver = newChecklist.Version }, newChecklist);
+
+
+        }
+
         [HttpPut("{id}/{ver}")]
         public async Task<IActionResult> EditChecklist(int id, short ver, ChecklistDescription checklistDescription)
         {

@@ -39,6 +39,12 @@ namespace ChecklistAngular.Data
             return checklist;
         }
 
+        //check if draft exists
+        public async Task<LogChecklist> CheckForDraft(int id)
+        {
+            return await _ctx.LogChecklist.FirstOrDefaultAsync(x => x.Idchecklist == id && x.Status == "Draft");
+        }
+
         public async Task<LogChecklistIndex> GetIndex(int id)
         {
             return await _ctx.LogChecklistIndex.FindAsync(id);

@@ -31,5 +31,6 @@ namespace ChecklistAngular.Data
         Task<IEnumerable<LogUpdate>> GetUpdates();
         Task<IEnumerable<LogChecklist>> GetChecklists();
         void ReorderSteps(LogChecklistSteps step);
+        Task<LogChecklist> CheckForDraft(int id);
     }
 }
