@@ -172,6 +172,12 @@ namespace ChecklistAngular.Controllers
 
         }
 
+        [HttpGet("{id}/draftExist")]
+        public async Task<ActionResult> CheckForDraft(int id)
+        {
+            return Ok(await _repo.DraftExists(id));
+        }
+
         [HttpPost("{id}/{ver}/approve")]
         [Authorize(Policy = "AccessUser")]
         public async Task<ActionResult> ApproveChecklist(int id, int ver)
