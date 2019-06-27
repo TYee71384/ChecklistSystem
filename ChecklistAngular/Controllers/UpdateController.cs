@@ -38,13 +38,10 @@ namespace ChecklistAngular.Controllers
             return Ok(returnList);
         }
 
-        [HttpGet("{id}", Name = "GetUpdateId")]
+        [HttpGet("{id}", Name = "GetUpdate")]
         public async Task<ActionResult> GetUpdate(int id)
         {
-            var update = await _repo.GetUpdate(id);
-
-            var timer = new TimerManager(() => _hub.Clients.All.SendAsync("recieveChecklist", _repo.GetUpdate(id)));
-            
+                     
             return Ok();
         }
 
@@ -53,7 +50,7 @@ namespace ChecklistAngular.Controllers
         [HttpPost]
         public async Task<ActionResult> StartUpdate(LogUpdate updateChecklist)
         {
-            var checklist = _repo.UpdateExists(updateChecklist);
+            var checklist = await _repo.UpdateExists(updateChecklist);
             if (checklist !=null)
                 return BadRequest($"{updateChecklist.Process} {updateChecklist.SiteKml} already exists. Please Try again");
             updateChecklist.StartTime = DateTime.Now;
@@ -70,10 +67,10 @@ namespace ChecklistAngular.Controllers
                     Idupdate = updateChecklist.Idupdate
                 };
 
-                _repo.Add(s);
+                _repo.Add(step);
             }
            if(await _repo.SaveAll())
-            return CreatedAtAction("GetUpdateId", new { id = updateChecklist.Idupdate }, updateChecklist);
+            return CreatedAtAction("GetUpdate", new { id = updateChecklist.Idupdate }, updateChecklist);
 
             return BadRequest("Failed to Create Update");
 
