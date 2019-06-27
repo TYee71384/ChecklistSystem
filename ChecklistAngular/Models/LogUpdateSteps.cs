@@ -10,6 +10,7 @@ namespace ChecklistAngular.Models
         public string StepText { get; set; }
         public string Comment { get; set; }
         public string Progress { get; set; }
+        public string Title { get; set; }
 
         public LogUpdate IdupdateNavigation { get; set; }
     }

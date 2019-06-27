@@ -22,8 +22,8 @@ namespace ChecklistAngular.Models
         public string UpdateRelease { get; set; }
         public string UpdatePpack { get; set; }
         public string Note { get; set; }
-        public int? Idchecklist { get; set; }
-        public short? Version { get; set; }
+        public int Idchecklist { get; set; }
+        public short Version { get; set; }
         public string Status { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }

@@ -13,6 +13,8 @@ namespace ChecklistAngular.Models
         public string StepText { get; set; }
         public string Title { get; set; }
 
+        public bool IsRequired { get; set; }
+
         [JsonIgnore]
         public LogChecklistIndex IdchecklistNavigation { get; set; }
         public LogChecklist LogChecklist { get; set; }

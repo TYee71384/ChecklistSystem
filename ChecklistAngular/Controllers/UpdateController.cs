@@ -5,10 +5,12 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using ChecklistAngular.Data;
 using ChecklistAngular.Helpers;
+using ChecklistAngular.Hubs;
 using ChecklistAngular.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChecklistAngular.Controllers
@@ -17,11 +19,13 @@ namespace ChecklistAngular.Controllers
     [ApiController]
     public class UpdateController : ControllerBase
     {
-        private readonly IChecklistRepository _repo;
+        private readonly IUpdateRepository _repo;
+        private readonly IHubContext<UpdatesHub> _hub;
 
-        public UpdateController(IChecklistRepository repo)
+        public UpdateController(IUpdateRepository repo, IHubContext<UpdatesHub> hub)
         {
             _repo = repo;
+            _hub = hub;
         }
 
         [HttpGet]
@@ -34,15 +38,48 @@ namespace ChecklistAngular.Controllers
             return Ok(returnList);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LogUpdate>> GetUpdate(int id)
+        [HttpGet("{id}", Name = "GetUpdateId")]
+        public async Task<ActionResult> GetUpdate(int id)
         {
-            var checklist = await _repo.GetUpdate(id);
-            if (checklist == null)
-                return BadRequest("Update does not exits");
+            var update = await _repo.GetUpdate(id);
+
+            var timer = new TimerManager(() => _hub.Clients.All.SendAsync("recieveChecklist", _repo.GetUpdate(id)));
             
-            return checklist;
+            return Ok();
         }
+
+        
+
+        [HttpPost]
+        public async Task<ActionResult> StartUpdate(LogUpdate updateChecklist)
+        {
+            var checklist = _repo.UpdateExists(updateChecklist);
+            if (checklist !=null)
+                return BadRequest($"{updateChecklist.Process} {updateChecklist.SiteKml} already exists. Please Try again");
+            updateChecklist.StartTime = DateTime.Now;
+            updateChecklist.Status = "In Progress";
+            _repo.Add(updateChecklist);
+            var steps = await _repo.GetSteps(updateChecklist.Idchecklist, updateChecklist.Version);
+            foreach (var s in steps)
+            {
+                var step = new LogUpdateSteps
+                {
+                    Step = s.Step,
+                    StepText = s.StepText,
+                    Title = s.Title,
+                    Idupdate = updateChecklist.Idupdate
+                };
+
+                _repo.Add(s);
+            }
+           if(await _repo.SaveAll())
+            return CreatedAtAction("GetUpdateId", new { id = updateChecklist.Idupdate }, updateChecklist);
+
+            return BadRequest("Failed to Create Update");
+
+
+
+        } 
 
         [HttpGet("{id}/Progress")]
         public async Task<ActionResult> GetProgress(int id)

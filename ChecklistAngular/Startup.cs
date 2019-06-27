@@ -1,6 +1,7 @@
 using AutoMapper;
 using ChecklistAngular.Data;
 using ChecklistAngular.Helpers;
+using ChecklistAngular.Hubs;
 using ChecklistAngular.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -28,10 +29,12 @@ namespace ChecklistAngular
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper();
+            services.AddSignalR();
             services.AddScoped<IChecklistRepository, ChecklistRepository>();
+            services.AddScoped<IUpdateRepository, UpdateRepository>();
             services.AddCors(o => o.AddPolicy("Angular", b=>
             {
-                b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials();
             }));
             
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -94,12 +97,15 @@ namespace ChecklistAngular
             }
 
             app.UseCors("Angular");
-
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<UpdatesHub>("/updates");
+            });
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
             //app.UseSpaStaticFiles();
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
            
             app.UseAuthentication();
             app.UseMvc(routes =>

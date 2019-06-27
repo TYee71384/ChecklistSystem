@@ -16,9 +16,9 @@ namespace ChecklistAngular.Controllers
     public class UpdateStepController : ControllerBase
     {
         
-        private readonly IChecklistRepository _repo;
+        private readonly IUpdateRepository _repo;
 
-        public UpdateStepController(IChecklistRepository repo)
+        public UpdateStepController(IUpdateRepository repo)
         {
             
            _repo = repo;
