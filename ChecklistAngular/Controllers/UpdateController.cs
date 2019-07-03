@@ -41,8 +41,8 @@ namespace ChecklistAngular.Controllers
         [HttpGet("{id}", Name = "GetUpdate")]
         public async Task<ActionResult> GetUpdate(int id)
         {
-                     
-            return Ok();
+            var update = await _repo.GetUpdate(id);         
+            return Ok(update);
         }
 
         

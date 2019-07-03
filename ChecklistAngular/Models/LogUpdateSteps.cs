@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace ChecklistAngular.Models
@@ -12,6 +13,7 @@ namespace ChecklistAngular.Models
         public string Progress { get; set; }
         public string Title { get; set; }
 
+        [JsonIgnore]
         public LogUpdate IdupdateNavigation { get; set; }
     }
 }

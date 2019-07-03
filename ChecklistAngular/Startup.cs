@@ -99,7 +99,7 @@ namespace ChecklistAngular
             app.UseCors("Angular");
             app.UseSignalR(routes =>
             {
-                routes.MapHub<UpdatesHub>("/updates");
+                routes.MapHub<UpdatesHub>("/updatesHub");
             });
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
