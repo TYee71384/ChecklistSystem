@@ -26,8 +26,7 @@ namespace ChecklistAngular.Hubs
             var step = await _repo.GetUpdateSteps(stepNum, id);
             step.Progress = action;
             await _repo.SaveAll();
-            var json = JsonConvert.SerializeObject(update);
-            await Clients.All.SendAsync("StepProgress", json);
+            await Clients.All.SendAsync("StepProgress", step.Progress, step.Step);
         }
 
         
