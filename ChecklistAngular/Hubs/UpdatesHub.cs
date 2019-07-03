@@ -22,13 +22,21 @@ namespace ChecklistAngular.Hubs
 
         public async Task GetProgress(int id, int stepNum, string action)
         {
-            var update = await _repo.GetUpdate(id);
             var step = await _repo.GetUpdateSteps(stepNum, id);
             step.Progress = action;
             await _repo.SaveAll();
-            await Clients.All.SendAsync("StepProgress", step.Progress, step.Step);
+            await Clients.All.SendAsync("StepProgress", step.Progress, step.Step, step.Comment);
         }
 
-        
+        public async Task SaveComment(int id, int stepNum, string comment)
+        {
+            var step = await _repo.GetUpdateSteps(stepNum, id);
+            step.Comment = comment;
+            await _repo.SaveAll();
+            await Clients.All.SendAsync("StepProgress", step.Progress, step.Step, step.Comment);
+
+        }
+
+
     }
 }
