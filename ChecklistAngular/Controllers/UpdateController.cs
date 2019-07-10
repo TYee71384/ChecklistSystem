@@ -85,6 +85,7 @@ namespace ChecklistAngular.Controllers
             if (checklist == null)
                 return BadRequest("Update does not exits");
             var progress = Helpers.Helpers.GetPercentage(checklist);
+            progress = progress.Replace("%","");
             return Ok(progress);
         }
 

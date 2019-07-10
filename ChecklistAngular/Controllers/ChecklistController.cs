@@ -226,13 +226,16 @@ namespace ChecklistAngular.Controllers
         public async Task<ActionResult> DeleteChecklist(int id, short ver)
         {
             var checklist = await _repo.GetChecklist(id, ver);
-            var status = checklist.Status;
-            
+            var status = checklist.Status;           
 
             if(status == "Draft")
             {
                 _repo.Delete(checklist);
-                _repo.Delete(await _repo.GetIndex(id));
+                
+                if (ver == 1)
+                {
+                    _repo.Delete(await _repo.GetIndex(id));
+                }
             }
 
             if (await _repo.SaveAll())

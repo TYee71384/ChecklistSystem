@@ -24,25 +24,26 @@ namespace ChecklistAngular.Hubs
         public async Task GetProgress(int id, int stepNum, string action)
         {
             var step = await _repo.GetUpdateSteps(stepNum, id);
-            var status = await _repo.GetUpdate(step.Idupdate);
+            var updatechecklist = await _repo.GetUpdate(step.Idupdate);
             step.Progress = action;
             switch (action)
             {
                 case "Done":
                     
-                    LogHistory(step, status.Status, "Completed Step ");
+                    LogHistory(step, updatechecklist.Status, "Completed Step ");
                     break;
                 case "Skip":
                     step.Progress = "Skip";
-                    LogHistory(step, status.Status, "Skipped Step ");
+                    LogHistory(step, updatechecklist.Status, "Skipped Step ");
                     break;
                 case "":
                     step.Progress = "";
-                    LogHistory(step, status.Status, "Unchecked Step ");
+                    LogHistory(step, updatechecklist.Status, "Unchecked Step ");
                     break;
             }
             await _repo.SaveAll();
-            await Clients.All.SendAsync("StepProgress", step.Progress, step.Step, step.Comment);
+            var percentage = Helpers.Helpers.GetPercentage(updatechecklist);
+            await Clients.All.SendAsync("StepProgress", step.Progress, step.Step, step.Comment, percentage);
         }
 
         public async Task SaveComment(int id, int stepNum, string comment)
