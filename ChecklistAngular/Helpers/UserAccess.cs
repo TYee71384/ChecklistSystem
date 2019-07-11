@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,7 @@ namespace ChecklistAngular.Helpers
 
         public UserAccess()
         {
-            User = WindowsIdentity.GetCurrent().Name;
-            User = User.Substring(User.IndexOf(@"\") + 1);
+
         }
     }
 }

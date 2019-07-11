@@ -15,11 +15,15 @@ namespace ChecklistAngular.Controllers
     public class DictionaryController : ControllerBase
     {
         private readonly SWAT_UpdateChecklistsContext _ctx;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly string user;
-        public DictionaryController(SWAT_UpdateChecklistsContext ctx)
+        public DictionaryController(SWAT_UpdateChecklistsContext ctx, IHttpContextAccessor httpContextAccessor)
         {
             _ctx = ctx;
-            user = WindowsIdentity.GetCurrent().Name;
+            this.httpContextAccessor = httpContextAccessor;
+           user = this.httpContextAccessor.HttpContext.User.Identity.Name;
+            // user = User.Identity.Name;
+           // user = WindowsIdentity.GetCurrent().Name;
             user = user.Substring(user.IndexOf(@"\") + 1);
         }
 

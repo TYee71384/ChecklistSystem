@@ -1,5 +1,6 @@
 ﻿using ChecklistAngular.Data;
 using ChecklistAngular.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using System;
@@ -13,12 +14,12 @@ namespace ChecklistAngular.Hubs
     public class UpdatesHub : Hub
     {
         private readonly IUpdateRepository _repo;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-       
-
-        public UpdatesHub(IUpdateRepository repo)
+        public UpdatesHub(IUpdateRepository repo, IHttpContextAccessor httpContextAccessor)
         {
             _repo = repo;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task GetProgress(int id, int stepNum, string action)
@@ -57,7 +58,10 @@ namespace ChecklistAngular.Hubs
 
         private void LogHistory(LogUpdateSteps step, string status, string action)
         {
-            var user = WindowsIdentity.GetCurrent().Name;
+         
+           var user = this.httpContextAccessor.HttpContext.User.Identity.Name;
+            
+            user = user.Substring(user.IndexOf(@"\") + 1);
             var history = new LogUpdateHistory
             {
                 Idupdate = step.Idupdate,

@@ -29,6 +29,7 @@ namespace ChecklistAngular
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper();
+            services.AddHttpContextAccessor();
             services.AddSignalR();
             services.AddScoped<IChecklistRepository, ChecklistRepository>();
             services.AddScoped<IUpdateRepository, UpdateRepository>();

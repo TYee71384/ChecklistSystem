@@ -1,5 +1,6 @@
 ﻿using ChecklistAngular.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using System;
 using System.Collections.Generic;
@@ -11,17 +12,25 @@ namespace ChecklistAngular.Helpers
     public class AuthorizedUser : AuthorizationHandler<UserAccess>
     {
         private SWAT_UpdateChecklistsContext ctx;
-        public AuthorizedUser(SWAT_UpdateChecklistsContext ctx)
+        private readonly IHttpContextAccessor httpContextAccessor;
+
+        public AuthorizedUser(SWAT_UpdateChecklistsContext ctx, IHttpContextAccessor httpContextAccessor)
         {
             this.ctx = ctx;
+            this.httpContextAccessor = httpContextAccessor;
         }
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, UserAccess user)
         {
-            
-            foreach(var u in ctx.ListUserApprove)
+            var newuser = httpContextAccessor.HttpContext.User.Identity.Name;
+            newuser = newuser.Substring(newuser.IndexOf(@"\") + 1);
+            foreach (var u in ctx.ListUserApprove)
             {
-                if (user.User.ToUpper() == u.UserApprove.ToString())
-                     context.Succeed(user);
+                if (newuser.ToUpper() == u.UserApprove.ToString())
+                {
+                    user.User = newuser;
+                context.Succeed(user);
+                }
+                     
 
                
             }

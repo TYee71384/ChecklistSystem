@@ -17,14 +17,18 @@ namespace ChecklistAngular.Controllers
     {
 
         private readonly IChecklistRepository _repo;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly string user;
 
 
-        public ChecklistStepsController(IChecklistRepository repo)
+        public ChecklistStepsController(IChecklistRepository repo, IHttpContextAccessor httpContextAccessor)
         {
 
             _repo = repo;
-            user = WindowsIdentity.GetCurrent().Name;
+            this.httpContextAccessor = httpContextAccessor;
+            user = this.httpContextAccessor.HttpContext.User.Identity.Name;
+            // user = User.Identity.Name;
+            // user = WindowsIdentity.GetCurrent().Name;
             user = user.Substring(user.IndexOf(@"\") + 1);
         }
 
