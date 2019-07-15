@@ -1,4 +1,5 @@
-﻿using ChecklistAngular.Models;
+﻿using ChecklistAngular.DTOs;
+using ChecklistAngular.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,13 @@ namespace ChecklistAngular.Helpers
             return string.Format("{0:0.0%}", (float)count / total);
         }
 
-       
+        public static string GetPercentage(UpdateSearch i)
+        {
+            var total = i.LogUpdateSteps.Count();
+            var count = i.LogUpdateSteps.Where(x => x.Progress == "Done" || x.Progress == "Skip").Count();
+            return string.Format("{0:0.0%}", (float)count / total);
+        }
+
+
     }
 }

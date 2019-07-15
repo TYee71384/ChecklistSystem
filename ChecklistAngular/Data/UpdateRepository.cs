@@ -1,4 +1,6 @@
-﻿using ChecklistAngular.Helpers;
+﻿using AutoMapper;
+using ChecklistAngular.DTOs;
+using ChecklistAngular.Helpers;
 using ChecklistAngular.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,10 +13,12 @@ namespace ChecklistAngular.Data
     public class UpdateRepository : IUpdateRepository
     {
         private readonly SWAT_UpdateChecklistsContext _ctx;
+        private readonly IMapper mapper;
 
-        public UpdateRepository(SWAT_UpdateChecklistsContext ctx)
+        public UpdateRepository(SWAT_UpdateChecklistsContext ctx, IMapper mapper)
         {
             _ctx = ctx;
+            this.mapper = mapper;
         }
 
         public void Add<T>(T entity) where T : class
@@ -45,7 +49,20 @@ namespace ChecklistAngular.Data
             return await _ctx.LogUpdate.ToListAsync();
         }
 
-       
+        public async Task<IEnumerable<UpdateSearch>> GetUpdatesForSearch()
+        {
+            var update = await _ctx.LogUpdate.Include(x => x.LogUpdateSteps).ToListAsync();
+          var change = mapper.Map<IEnumerable<UpdateSearch>>(update);
+            foreach(var i in change)
+            {
+                i.Percentage = Helpers.Helpers.GetPercentage(i).ToString();
+            }
+
+            return (change);
+        }
+
+
+
         //server side paging (commented out in case ned in the future, using client side instead for use with primeng datatable)
         //public async Task<PagedList<LogUpdate>> GetUpdates(UpdateParams uparams)
         //{

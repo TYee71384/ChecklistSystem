@@ -31,7 +31,7 @@ namespace ChecklistAngular.Controllers
         [HttpGet]
         public async Task<ActionResult> GetUpdateChecklists()
         {
-           var returnList = await _repo.GetUpdates();
+           var returnList = await _repo.GetUpdatesForSearch();
 
           //  Response.AddPagination(returnList.CurrentPage, returnList.PageSize, returnList.TotalCount, returnList.TotalPages);
 

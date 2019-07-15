@@ -14,6 +14,7 @@ namespace ChecklistAngular.Helpers
         {
             CreateMap<LogUpdate, Report>();
             CreateMap<LogChecklist, ChecklistDescription>().ReverseMap();
+            CreateMap<LogUpdate, UpdateSearch>();
         }
     }
 }

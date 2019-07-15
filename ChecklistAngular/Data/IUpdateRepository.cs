@@ -14,6 +14,7 @@ namespace ChecklistAngular.Data
         Task<IEnumerable<Models.LogChecklistSteps>> GetSteps(int id, short ver);
         Task<Models.LogUpdate> GetUpdate(int id);
         Task<IEnumerable<Models.LogUpdate>> GetUpdates();
+        Task<IEnumerable<DTOs.UpdateSearch>> GetUpdatesForSearch();
         Task<Models.LogUpdateSteps> GetUpdateSteps(int stepId, int updateId);
         Task<bool> SaveAll();
         Task<Models.LogUpdate> SingleChecklistSelect(Helpers.UpdateParams uparams);
